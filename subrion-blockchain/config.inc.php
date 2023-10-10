@@ -1,6 +1,6 @@
 <?php
 /*
- * Subrion Open Source CMS 4.1.0
+ * Subrion Open Source CMS 4.0.0
  * Config file generated on 13 April 2023 04:01:01
  */
 
