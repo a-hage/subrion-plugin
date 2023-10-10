@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module type="plugin" name="blockchain">
+    <title>Blockchain Filter</title>
+    <summary>This plugin let users able to filter the Blockchain.</summary>
+    <author>Abdo El Hage</author>
+    <contributor>Abdo El Hage</contributor>
+    <version>1.0.0</version>
+    <date>2019-08-23</date>
+    <compatibility>4.0.0</compatibility>
+
+    <items>
+        <item table_name="blockchain">blockchain</item>
+        <item table_name="category">category</item>
+        <item table_name="blockchain_category">blockchain_category</item>
+        <item table_name="protocol">blockchainprotocol</item>
+        <item table_name="signatur">blockchainsignatur</item>
+        <item table_name="hash">blockchainhash</item>
+        <item table_name="blockchain_hash">blockchain_hash</item>
+        <item table_name="socialmedia">blockchainsocialmedia</item>
+        <item table_name="blockchain_socialmedia">blockchain_socialmedia</item>
+    </items>
+	<actions>
+		<action name="blockchain_detail" url="blockchain-detail" icon="list" pages="blockchain_detail:edit,blockchain_detail:read"><![CDATA[]]></action>
+		<action name="blockchain_compare" url="compare" icon="list" pages="blockchain_compare:edit,blockchain_compare:read"><![CDATA[]]></action>
+	</actions>
+	
+    <adminpages>
+        <!--<page name="blockchain" url="blockchain/" menus="menu" filename="blockchain">Blockchain</page> -->
+        <!--<page name="blockchaincategory" url="blockchaincategory/" filename="blockchaincategory">BlockchainCategory</page>-->
+    </adminpages> 
+    
+    <pages>
+        <page name="blockchain" menus="main" url="blockchain">Blockchain</page>
+        <page name="blockchain_detail" url="blockchain-detail" filename="detail" action ="detail">Blockchain Details</page>
+        <page name="blockchain_compare" url="compare" filename="compare" action ="compare" >Blockchain Compare</page>
+    </pages>
+
+     <phrases>
+		<phrase category="common" key="blockchain">Blockchain</phrase>
+        <phrase category="common" key="no_blockchain">No Blockchain.</phrase>
+        <phrase category="frontend" key="view_all_blockchain_detail">View blockchain details</phrase>
+    </phrases>
+    
+</module>
