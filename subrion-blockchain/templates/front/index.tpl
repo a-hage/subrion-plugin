@@ -41,7 +41,7 @@
 <div class="row">
 	<div class="col-md-12" style="height:30px;">
 		{if isset($categoryFilter) && !empty($categoryFilter)}
-			{for $i=0 to count($categoryFilter)}
+			{for $i=0 to count($categoryFilter)-1}
 				<span class="">
 					{if count($categoryFilter)== 1}
 						<mark>{ucfirst($categoryFilter[$i])}</mark>
@@ -98,7 +98,7 @@
 											{if isset($blocks) && !empty($blocks)}
 												{foreach $blocks as $block}
 													{if $block.name == $blockchains.name}
-														{for $i=0 to count($block.category)}
+														{for $i=0 to count($block.category)-1}
 															{if count($block.category)==1 }
 																{ucfirst($block.category[$i].name)}
 															{/if}
@@ -114,7 +114,7 @@
 										</span>
 									</div>
 									<span class="d-none d-lg-block">{$blockchains.description} 
-										<a name="info" id="{$blockchains.name}" href="{$smarty.const.IA_URL}blockchain/detail/?detail={$blockchains.name}">Learn more about {$blockchains.name}</a>
+										<a name="info" id="{$blockchains.name}" href="{$detailPageUrl}?detail={$blockchains.name|escape:'url'}">Learn more about {$blockchains.name}</a>
 									</span>
 								</div>
 							</div>
@@ -161,7 +161,7 @@
 											{if isset($blocks) && !empty($blocks)}
 												{foreach $blocks as $block}
 													{if $block.name == $item.name}
-														{for $i=0 to count($block.category)}
+														{for $i=0 to count($block.category)-1}
 															{if count($block.category)==1 }
 																{ucfirst($block.category[$i].name)}
 															{/if}
@@ -177,7 +177,7 @@
 										</span>
 									</div> 
 									<span class="d-none d-lg-block">{$item.description} 
-										<a name="info" id="{$item.name}" href="{$smarty.const.IA_URL}blockchain/detail/?detail={$item.name}">Learn more about {$item.name}</a>
+										<a name="info" id="{$item.name}" href="{$detailPageUrl}?detail={$item.name|escape:'url'}">Learn more about {$item.name}</a>
 									</span>
 								</div>
 							</div>
@@ -194,12 +194,12 @@
 			<div class="cell one-whole">                                    
 				<p class="color-text">Compare (<b id="summary-box-count"></b>) Blockchains has been added to compare.</p>                
 			</div>                                    
-			<div class="cell one-whole">                                     		 
+			<div class="cell one-whole">
 				<ul class="blockchains-compare inline-block">
 				
 				</ul>                                      
 				<div class="compare-section-actions inline-block">
-					<a class="view-comparison" style="display: none;" onClick="getListItem(this);">Compare Now!</a>
+					<a class="view-comparison" style="display: none;" data-compare-url="{$comparePageUrl}" onClick="getListItem(this);">Compare Now!</a>
 					<a class="remove-all-items">Remove All</a>
 				</div>
 			</div> 
