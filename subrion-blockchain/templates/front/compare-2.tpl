@@ -46,7 +46,7 @@
 							{ucfirst($blockchainCompare[$i].category[0]['name'])} {'...'}
 							<i class="fa fa-info icon-info-background" data-toggle="tooltip" 
 							title="
-								{for $k=0 to count($blockchainCompare[$i].category)}
+								{for $k=0 to count($blockchainCompare[$i].category)-1}
 									{if $k lt count($blockchainCompare[$i].category)-1} 
 										{ucfirst($blockchainCompare[$i].category[$k]['name'])} {','} 
 									{else} 
@@ -58,7 +58,7 @@
 							{ucfirst($blockchainCompare[$i].category[0]['name'])}{','} {ucfirst($blockchainCompare[$i].category[1]['name'])}{'...'}&nbsp;
 							<i class="fa fa-info icon-info-background" data-toggle="tooltip" 
 							title="
-								{for $k=0 to count($blockchainCompare[$i].category)}
+								{for $k=0 to count($blockchainCompare[$i].category)-1}
 									{if $k lt count($blockchainCompare[$i].category)-1} 
 										{ucfirst($blockchainCompare[$i].category[$k]['name'])} {','} 
 									{else} 
@@ -92,7 +92,7 @@
 						{ucfirst($blockchainCompare[$i].hash[0]['name'])}{'...'}&nbsp;
 						<i class="fa fa-info icon-info-background" data-toogle="tooltip"
 						title="
-							{for $k=0 to count($blockchainCompare[$i].hash)}
+							{for $k=0 to count($blockchainCompare[$i].hash)-1}
 								{if $k lt count($blockchainCompare[$i].hash) -1 }
 									{ucfirst($blockchainCompare[$i].hash[$k]['name'])} {','} 
 								{else} 
