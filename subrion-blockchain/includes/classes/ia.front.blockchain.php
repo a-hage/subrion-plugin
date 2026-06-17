@@ -3,36 +3,33 @@ class iaBlockchain extends abstractModuleFront
 {
 	protected static $_table = 'blockchain';
 	protected $_moduleName = 'blockchain';
-	protected $_itemName = 'blockchain'; 
-		
+	protected $_itemName = 'blockchain';
 	/**
 	 * get all the blockchain saved in the database
 	 * @retrun an array
 	 */
-	 
+
 	public function get()
 	{
 		$this->iaCore->factoryItem('blockchaincategory');
 		$this->iaCore->factoryItem('blockchain_category');
-		
+
 		$sql= <<<SQL
-SELECT DISTINCT b.`name` , b.`website`, b.`description` 
-FROM `:table_blockchain` b 
-INNER JOIN `:table_blockchain_category` b_c ON (b_c.`blockchainId` = b.`id`) 
-INNER JOIN `:table_blockchaincategory` bc ON (b_c.`categoryId` = bc.`id`) 
-WHERE b.`version`= 1
+SELECT DISTINCT b.`name` , b.`website`, b.`description`
+FROM `:table_blockchain` b
+INNER JOIN `:table_blockchain_category` b_c ON (b_c.`blockchainId` = b.`id`)
+INNER JOIN `:table_blockchaincategory` bc ON (b_c.`categoryId` = bc.`id`)
 SQL;
-			
+
 		$sql = $this->iaDb::printf($sql,['prefix' => $this->iaDb->prefix,
 										'table_blockchain' => self::getTable(true),
 										'table_blockchaincategory' => iaBlockchainCategory::getTable(true),
 										'table_blockchain_category' => iaBlockchain_Category::getTable(true)]);
-			
+
 		$result = $this->iaDb->getAll($sql);
+		#print_r($result)
 		return $result;
 	}
-	
-	
 	/**
 	 * get the Used Category for the inserted blockchains
 	 * @retrun a array
@@ -41,22 +38,20 @@ SQL;
 	{
 		$this->iaCore->factoryItem('blockchaincategory');
 		$this->iaCore->factoryItem('blockchain_category');
-		
 		$sql= <<<SQL
-SELECT DISTINCT b_c.`categoryId`, bc.`name` 
-FROM `:table_blockchain_category` b_c 
+SELECT DISTINCT b_c.`categoryId`, bc.`name`
+FROM `:table_blockchain_category` b_c
 INNER JOIN `:table_blockchaincategory` bc ON (b_c.`categoryId` = bc.`id`)
 SQL;
-			
+
 		$sql = $this->iaDb::printf($sql,['prefix' => $this->iaDb->prefix,
 										'table_blockchaincategory' => iaBlockchainCategory::getTable(true),
-										'table_blockchain_category' => iaBlockchain_Category::getTable(true)]);	
+										'table_blockchain_category' => iaBlockchain_Category::getTable(true)]);
 		$category = $this->iaDb->getAll($sql);
-		//print_r($result);
+		//print_r($category);
 		return $category;
 	}
-	
-	
+
 	/**
 	 * get the Filter of Category
 	 * @param categoryFilter category POST
@@ -72,71 +67,70 @@ SQL;
 		}
 		//echo "Test";
 		//print_r($category_filter);
-		
+
 		$sql= <<<SQL
-		SELECT DISTINCT b.`name` , b.`website`, b.`description` 
-		FROM `:table_blockchain` b 
-		INNER JOIN `:table_blockchain_category` b_c ON (b_c.`blockchainId` = b.`id`) 
-		INNER JOIN `:table_blockchaincategory` bc ON (bc.`id` = b_c.`categoryId`) 
-		WHERE bc.`name` IN('$category_filter')
-		  AND b.`version`= 1
-		GROUP BY b_c.`blockchainId`
-		SQL;
+SELECT DISTINCT b.`name` , b.`website`, b.`description`
+FROM `:table_blockchain` b
+INNER JOIN `:table_blockchain_category` b_c ON (b_c.`blockchainId` = b.`id`)
+INNER JOIN `:table_blockchaincategory` bc ON (bc.`id` = b_c.`categoryId`)
+WHERE bc.`name` IN('$category_filter')
+  AND b.`version`= 1
+GROUP BY b_c.`blockchainId`
+SQL;
 		$sql = $this->iaDb::printf($sql,['prefix' => $this->iaDb->prefix,
 										'table_blockchain' => self::getTable(true),
 										'table_blockchaincategory' => iaBlockchainCategory::getTable(true),
 										'table_blockchain_category' => iaBlockchain_Category::getTable(true)]);
-			
+
 		return $this->iaDb->getAll($sql);
 	}
-	
-	
+
 	/**
 	 * get the Categories for specific blockchain
 	 * @param the blockchain name
 	 * @return an array
-	 */ 
-	 
+	 */
+
 	public function getBlockchainCategory($name)
 	{
 		$this->iaCore->factoryItem('blockchaincategory');
 		$this->iaCore->factoryItem('blockchain_category');
-		
+
 		$sql= <<<SQL
-		SELECT bc.`name`
-		FROM `:table_blockchaincategory` bc  
-		INNER JOIN `:table_blockchain_category` b_c ON (bc.`id` = b_c.`categoryId`) 
-		INNER JOIN `:table_blockchain` b ON (b_c.`blockchainId` = b.`id`)
-		WHERE b.`name` = '$name';
-		SQL;
+SELECT bc.`name`
+FROM `:table_blockchaincategory` bc
+INNER JOIN `:table_blockchain_category` b_c ON (bc.`id` = b_c.`categoryId`)
+INNER JOIN `:table_blockchain` b ON (b_c.`blockchainId` = b.`id`)
+WHERE b.`name` = '$name';
+SQL;
 		$sql = $this->iaDb::printf($sql,['prefix' => $this->iaDb->prefix,
 										'table_blockchain' => self::getTable(true),
 										'table_blockchaincategory' => iaBlockchainCategory::getTable(true),
 										'table_blockchain_category' => iaBlockchain_Category::getTable(true)
 										]);
 		$results = $this->iaDb->getAll($sql);
-		
+
 		return $results;
 	}
-	
-	
+
+
 	/**
 	 * get the Protocol for specific blockchain
 	 * @param the blockchain name
 	 * @retrun an array
 	 */
-	 
+
 	public function getBlockchainProtocol($name)
 	{
-		
+
 		$this->iaCore->factoryItem('blockchainprotocol');
 		
 		$sql= <<<SQL
-		SELECT bp.`name`,bp.`abbreviation`
-		FROM `:table_blockchainprotocol` bp  
-		INNER JOIN `:table_blockchain` b ON (bp.`id` = b.`protocolId`)
-		WHERE b.`name` = '$name';
-		SQL;
+SELECT bp.`name`,bp.`abbreviation`
+FROM `:table_blockchainprotocol` bp  
+INNER JOIN `:table_blockchain` b ON (bp.`id` = b.`protocolId`)
+WHERE b.`name` = '$name';
+SQL;
 		$sql = $this->iaDb::printf($sql,['prefix' => $this->iaDb->prefix,
 										'table_blockchain' => self::getTable(true),
 										'table_blockchainprotocol' => iaBlockchainProtocol::getTable(true)
@@ -159,12 +153,12 @@ SQL;
 		$this->iaCore->factoryItem('blockchain_hash');
 		
 		$sql= <<<SQL
-		SELECT bh.`name`
-		FROM `:table_blockchainhash` bh 
-		INNER JOIN `:table_blockchain_hash` b_h ON (bh.`id` = b_h.`hashId`)
-		INNER JOIN `:table_blockchain` b ON (b.`id` = b_h.`blockchainId`)
-		WHERE b.`name` = '$name';
-		SQL;
+SELECT bh.`name`
+FROM `:table_blockchainhash` bh 
+INNER JOIN `:table_blockchain_hash` b_h ON (bh.`id` = b_h.`hashId`)
+INNER JOIN `:table_blockchain` b ON (b.`id` = b_h.`blockchainId`)
+WHERE b.`name` = '$name';
+SQL;
 		$sql = $this->iaDb::printf($sql,['prefix' => $this->iaDb->prefix,
 										'table_blockchain' => self::getTable(true),
 										'table_blockchainhash' => iaBlockchainHash::getTable(true),
@@ -199,11 +193,11 @@ SQL;
 		$this->iaCore->factoryItem('blockchainsignatur');
 		
 		$sql= <<<SQL
-		SELECT bs.`name`
-		FROM `:table_blockchainsignatur` bs 
-		INNER JOIN `:table_blockchain` b ON (bs.`id` = b.`signaturId`)
-		WHERE b.`name` = '$name';
-		SQL;
+SELECT bs.`name`
+FROM `:table_blockchainsignatur` bs 
+INNER JOIN `:table_blockchain` b ON (bs.`id` = b.`signaturId`)
+WHERE b.`name` = '$name';
+SQL;
 		$sql = $this->iaDb::printf($sql,['prefix' => $this->iaDb->prefix,
 										'table_blockchain' => self::getTable(true),
 										'table_blockchainsignatur' => iaBlockchainSignatur::getTable(true)
@@ -239,12 +233,12 @@ SQL;
 		$this->iaCore->factoryItem('blockchain_socialmedia');
 		
 		$sql= <<<SQL
-		SELECT bsm.`name`
-		FROM `:table_blockchainsocialmedia` bsm
-		INNER JOIN `:table_blockchain_socialmedia` b_sm ON (bsm.`id` = b_sm.`fkSocialmediaId`)
-		INNER JOIN `:table_blockchain` b ON (b.`id` = b_sm.`fkBlockchainId`)
-		WHERE b.`name` = '$name';
-		SQL;
+SELECT bsm.`name`
+FROM `:table_blockchainsocialmedia` bsm
+INNER JOIN `:table_blockchain_socialmedia` b_sm ON (bsm.`id` = b_sm.`fkSocialmediaId`)
+INNER JOIN `:table_blockchain` b ON (b.`id` = b_sm.`fkBlockchainId`)
+WHERE b.`name` = '$name';
+SQL;
 		$sql = $this->iaDb::printf($sql,['prefix' => $this->iaDb->prefix,
 										'table_blockchain' => self::getTable(true),
 										'table_blockchainsocialmedia' => iaBlockchainSocialmedia::getTable(true),
@@ -263,20 +257,20 @@ SQL;
 	public function getBlockchain($name)
 	{
 		$sql= <<<SQL
-		SELECT b.id,b.version,b.name,b.exchangeSymbol,b.description,
-		b.website,b.color,b.runtime,b.isAPISupport,b.blocktime,
-		b.isBlockRewards,b.isAtomicSwap,b.isSideChildChain,b.isPrivacyFeature,
-		b.mainnetLaunched,b.latestRelease,b.isTokenAvailable,b.transactionCost,
-		b.transactionPerformance,b.scalabilityOfNetwork,b.securityOfTransaction,
-		b.securityOfBlockchain,b.permission,b.isModularity,b.isEcosystem,
-		b.energyConsumption,b.isDecentralizedExchange,b.isDistributedLedgerTechnology,
-		b.isIntegrationInLegacySystem,b.typeOfCryptoTechnology,b.industryFocus,b.wallet,
-		b.developerTeamSize,b.isSupportTeam,b.isMaintenanceRequired,b.maturity,
-		b.proprietary,b.licensing,b.pricing,b.isProductionReady,b.storageCapacity,
-		b.partnershipAlliance,b.links
-		FROM `:table_blockchain` b
-		WHERE b.`name` = '$name';
-		SQL;
+SELECT b.id,b.version,b.name,b.exchangeSymbol,b.description,
+b.website,b.color,b.runtime,b.isAPISupport,b.blocktime,
+b.isBlockRewards,b.isAtomicSwap,b.isSideChildChain,b.isPrivacyFeature,
+b.mainnetLaunched,b.latestRelease,b.isTokenAvailable,b.transactionCost,
+b.transactionPerformance,b.scalabilityOfNetwork,b.securityOfTransaction,
+b.securityOfBlockchain,b.permission,b.isModularity,b.isEcosystem,
+b.energyConsumption,b.isDecentralizedExchange,b.isDistributedLedgerTechnology,
+b.isIntegrationInLegacySystem,b.typeOfCryptoTechnology,b.industryFocus,b.wallet,
+b.developerTeamSize,b.isSupportTeam,b.isMaintenanceRequired,b.maturity,
+b.proprietary,b.licensing,b.pricing,b.isProductionReady,b.storageCapacity,
+b.partnershipAlliance,b.links
+FROM `:table_blockchain` b
+WHERE b.`name` = '$name';
+SQL;
 		$sql = $this->iaDb::printf($sql,['prefix' => $this->iaDb->prefix,
 										'table_blockchain' => self::getTable(true)
 										]);
@@ -312,21 +306,21 @@ SQL;
 			}		
 		}
 		$sql= <<<SQL
-		SELECT b.id,b.version,b.name,b.exchangeSymbol,b.description,
-		b.website,b.color,b.runtime,b.isAPISupport,b.blocktime,
-		b.isBlockRewards,b.isAtomicSwap,b.isSideChildChain,b.isPrivacyFeature,
-		b.mainnetLaunched,b.latestRelease,b.isTokenAvailable,b.transactionCost,
-		b.transactionPerformance,b.scalabilityOfNetwork,b.securityOfTransaction,
-		b.securityOfBlockchain,b.permission,b.isModularity,b.isEcosystem,
-		b.energyConsumption,b.isDecentralizedExchange,b.isDistributedLedgerTechnology,
-		b.isIntegrationInLegacySystem,b.typeOfCryptoTechnology,b.industryFocus,b.wallet,
-		b.developerTeamSize,b.isSupportTeam,b.isMaintenanceRequired,b.maturity,
-		b.proprietary,b.licensing,b.pricing,b.isProductionReady,b.storageCapacity,
-		b.partnershipAlliance,b.links
-		FROM `:table_blockchain` b
-		WHERE b.`name` IN ('$compare_filter'); 
-		SQL;
-					
+SELECT b.id,b.version,b.name,b.exchangeSymbol,b.description,
+b.website,b.color,b.runtime,b.isAPISupport,b.blocktime,
+b.isBlockRewards,b.isAtomicSwap,b.isSideChildChain,b.isPrivacyFeature,
+b.mainnetLaunched,b.latestRelease,b.isTokenAvailable,b.transactionCost,
+b.transactionPerformance,b.scalabilityOfNetwork,b.securityOfTransaction,
+b.securityOfBlockchain,b.permission,b.isModularity,b.isEcosystem,
+b.energyConsumption,b.isDecentralizedExchange,b.isDistributedLedgerTechnology,
+b.isIntegrationInLegacySystem,b.typeOfCryptoTechnology,b.industryFocus,b.wallet,
+b.developerTeamSize,b.isSupportTeam,b.isMaintenanceRequired,b.maturity,
+b.proprietary,b.licensing,b.pricing,b.isProductionReady,b.storageCapacity,
+b.partnershipAlliance,b.links
+FROM `:table_blockchain` b
+WHERE b.`name` IN ('$compare_filter'); 
+SQL;
+			
 		$sql = $this->iaDb::printf($sql,['prefix' => $this->iaDb->prefix,
 									'table_blockchain' => self::getTable(true)
 									]);
@@ -382,9 +376,9 @@ SQL;
 	public function getById($id, $decorate = true)
     {
         $sql = <<<SQL
-		SELECT * FROM :table_blockchain
-		WHERE `id` = :id
-		SQL;
+SELECT * FROM :table_blockchain
+WHERE `id` = :id
+SQL;
         $sql = iaDb::printf($sql, [
             'table_blockchain' => self::getTable(true),
             'id' => $id
