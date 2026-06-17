@@ -27,4 +27,3 @@
 </div>
 <!-- Ein Leeeres Containers -->
 <div class="col-md-0 aside"></div>
-															
