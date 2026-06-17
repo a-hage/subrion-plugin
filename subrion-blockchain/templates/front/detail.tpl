@@ -327,6 +327,3 @@
 	  $(this).height(heighest_infoTextElement);
 	});
 {/ia_add_js}
-
-
-
