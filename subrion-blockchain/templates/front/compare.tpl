@@ -65,7 +65,7 @@
 										{if $blockchainCompare[$i].category|@count gt 1}
 											<i class="fa fa-info icon-info-background" data-toggle="tooltip" 
 												title="
-												{for $k=0 to count($blockchainCompare[$i].category)}
+												{for $k=0 to count($blockchainCompare[$i].category)-1}
 													{if $k lt count($blockchainCompare[$i].category)-1} 
 														{ucfirst($blockchainCompare[$i].category[$k]['name'])} {','} 
 													{else} 
@@ -107,7 +107,7 @@
 											{if $blockchainCompare[$i].hash|@count gt 1}
 												<i class="fa fa-info icon-info-background" data-toogle="tooltip"
 												title="
-													{for $k=0 to count($blockchainCompare[$i].hash)}
+													{for $k=0 to count($blockchainCompare[$i].hash)-1}
 														{if $k lt count($blockchainCompare[$i].hash) -1 }
 															{ucfirst($blockchainCompare[$i].hash[$k]['name'])} {','} 
 														{else} 
@@ -328,7 +328,7 @@
 				</table>
 			</div>	
 		</div>
-		{elseif $blockchainCompare|@count == 2}
+		{elseif $blockchainCompare|@count== 2}
 			{foreach $blockchainCompare as $compare2}
 				{for $i=0 to count($compareName) -1}
 					{if $compareName[$i] == $compare2.name}
@@ -337,6 +337,8 @@
 				{/for}
 			{/foreach}
 		{/if}
+	{else}
+		<div class="alert alert-info">{lang key='no_blockchain'}</div>
 	{/if}	
 </div>
 <!-- End Compare-Container -->
