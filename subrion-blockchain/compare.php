@@ -1,13 +1,22 @@
 <?php
 
 	if ($iaView->getRequestType() == iaView::REQUEST_HTML) {
-  
+
 		$iaBlockchain = $iaCore->factoryModule('blockchain', IA_CURRENT_MODULE);
 		$iaDb->setTable($iaBlockchain::getTable());
 		$listing = [];
+		$blockchainCompare = array();
+		$compareName = array();
+		$compareParam = isset($_GET['compare']) ? $_GET['compare'] : array();
+		$hasCompare = is_array($compareParam)
+			? !empty($compareParam)
+			: '' !== trim((string)$compareParam);
 		iaBreadcrumb::add(iaLanguage::get('blockchain'), IA_URL . 'blockchain/');
 		switch ($pageAction) {
 			case iaCore::ACTION_READ:
+				if ($hasCompare) {
+					break;
+				}
 				$id = (int)(isset($_GET['id']) ? $_GET['id'] : end($iaCore->requestPath));
 				if (!$id) {
 					return iaView::errorPage(iaView::ERROR_NOT_FOUND);
@@ -17,15 +26,15 @@
 					return iaView::errorPage(iaView::ERROR_NOT_FOUND);
 				}
 		}
-		
-		if(isset($_GET['compare']) && !empty($_GET['compare'])){
-			$name = $_GET['compare'];
-			$blockchainCompare = $iaCore->factoryItem('blockchain')->getBlockchainCompare($name);
-			//print_r($blockchainCompare);
-			$compareName = explode(',',$name);
+
+		if ($hasCompare) {
+			$blockchainCompare = $iaBlockchain->getBlockchainCompare($compareParam);
+			$compareName = is_array($compareParam)
+				? array_values(array_filter(array_map('trim', $compareParam), 'strlen'))
+				: array_values(array_filter(array_map('trim', explode(',', $compareParam)), 'strlen'));
 		}
-		
-		if (empty($_GET['compare']) || empty($blockchainCompare)) {
+
+		if (!$hasCompare) {
 			return iaView::errorPage(iaView::ERROR_NOT_FOUND);
 		}
 		//print_r($compareName);
@@ -43,16 +52,14 @@
 		}
 		//print_r($industry);
 		sort($industry);
-		$getIndustryFocus = array_values(array_unique($industry)); 
+		$getIndustryFocus = array_values(array_unique($industry));
 		//print_r($getIndustryFocus);
-			
-		
-		
+
 		$iaView->assign('compareName',$compareName);
 		$iaView->assign('blockchainCompare',$blockchainCompare);
 		$iaView->assign('getIndustryFocus',$getIndustryFocus);
 		$iaView->display('compare');
-	
+
 	}
 
 ?>
